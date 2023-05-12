@@ -95,9 +95,9 @@ if __name__ == '__main__':
 
         elif pasirinkimas == 4:
             darbuotojai = spausdinti(session)
-            trinamo_darbuotjo_id = int(input('Pasirinkite norimo istrinti darbuotojo ID: '))
+            trinamo_darbuotojo_id = int(input('Pasirinkite norimo istrinti darbuotojo ID: '))
             try:
-                trinamas_darbuotojas = session.get(Darbuotojai, trinamo_darbuotjo_id)
+                trinamas_darbuotojas = session.get(Darbuotojai, trinamo_darbuotojo_id)
                 session.delete(trinamas_darbuotojas)
                 session.commit()
             except Exception as e:
