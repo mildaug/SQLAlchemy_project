@@ -35,17 +35,23 @@ class DarbuotojaiGui:
                 darbuotojas = self.prideti_darbuotoja()
                 if isinstance(darbuotojas, Darbuotojai):
                     self.table.update(values=self.get_data())
-            elif event == "istrinti":
+            elif event == 'istrinti':
                 pasirinkta_eilute = values['-TABLE-']
                 if pasirinkta_eilute:
                     pasirinkta_eilute = pasirinkta_eilute[0]
-                    indeksas = pasirinkta_eilute
-                    trinamas_darbuotojas = session.query(Darbuotojai).get(self.darbuotoju_sarasas[indeksas].id)
+                    trinamas_darbuotojas = session.query(Darbuotojai).get(self.darbuotoju_sarasas[pasirinkta_eilute].id)
                     session.delete(trinamas_darbuotojas)
                     session.commit()
                     if isinstance(trinamas_darbuotojas, Darbuotojai):
-                        del self.darbuotoju_sarasas[indeksas]
+                        del self.darbuotoju_sarasas[pasirinkta_eilute]
                         self.table.update(values=self.get_data())
+            elif event == 'atnaujinti':
+                pasirinkta_eilute = values['-TABLE-']
+                if pasirinkta_eilute:
+                    pasirinkta_eilute = pasirinkta_eilute[0]
+                    atnaujinamas_darbuotojas = self.darbuotoju_sarasas[pasirinkta_eilute]
+                    atnaujintas_darbuotojas = self.atnaujinti_darbuotoja(atnaujinamas_darbuotojas)
+                    self.table.update(values=self.get_data())
 
     def prideti_darbuotoja(self):
 
@@ -82,6 +88,39 @@ class DarbuotojaiGui:
                     window_add.close()
                     return darbuotojas
                 
+    def atnaujinti_darbuotoja(self, darbuotojas):
+                
+        layout = [
+            [sg.Text('Vardas:'), sg.Input(darbuotojas.vardas, key='vardas')],
+            [sg.Text('Pavarde:'), sg.Input(darbuotojas.pavarde, key='pavarde')],
+            [sg.Text('Gimimo data:'), sg.Input(darbuotojas.gimimo_data, key='gimimo_data')],
+            [sg.Text('Pareigos:'), sg.Input(darbuotojas.pareigos, key='pareigos')],
+            [sg.Text('Atlyginimas:'), sg.Input(darbuotojas.atlyginimas, key='atlyginimas')],
+            [sg.Text('Idarbinimo data:'), sg.Input(darbuotojas.nuo_kada_dirba, key='nuo_kada_dirba')],
+            [sg.Button('Atnaujinti', key='Atnaujinti'), sg.Button('Atsaukti', key='Atsaukti')]
+        ]
+        window_add = sg.Window('Atnaujinti darbuotojo info', layout=layout)
+
+        while True:
+            event, values = window_add.read()
+            if event in (None, 'Atsaukti'):
+                window_add.close()
+                return None
+            elif event == 'Atnaujinti':
+                try:
+                    darbuotojas.vardas = values['vardas']
+                    darbuotojas.pavarde = values['pavarde']
+                    darbuotojas.gimimo_data = values['gimimo_data']
+                    darbuotojas.pareigos = values['pareigos']
+                    darbuotojas.atlyginimas = values['atlyginimas']
+                    darbuotojas.nuo_kada_dirba = values['nuo_kada_dirba']
+                    session.commit()
+                except Exception as e:
+                    print(e)
+                else:
+                    window_add.close()
+                    return darbuotojas
+              
 
 darbuotojai = DarbuotojaiGui()
 darbuotojai.run()
