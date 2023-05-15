@@ -23,7 +23,7 @@ class Order(Base):
     products = relationship('ProductOrder', back_populates='order')
     status = relationship('Status', back_populates='orders')
 
-def print(session):
+def print_orders(session):
     uzsakymai = session.query(Order).all()
     for uzsakymas in uzsakymai:
         print(uzsakymas)
@@ -108,7 +108,12 @@ while True:
         session.commit()
 
     elif choice == 5:
-        pass
+        uzsakymo_id = int(input('Iveskite uzsakymo ID: '))
+        uzsakymo_info = session.query(Order).filter(Order.id == uzsakymo_id).first()
+        if uzsakymo_info:
+            print(uzsakymo_info)
+        else:
+            print('Uzsakymas su nurodytu numeriu nerastas.')
 
     elif choice == 6:
         def print_orders(session):
@@ -128,7 +133,19 @@ while True:
             print('Uzsakymas su nurodytu ID nerastas.')
 
     elif choice == 7:
-        pass
+        order_id = int(input('Iveskite uzsakymo ID: '))
+        product_id = int(input('Iveskite produkto ID: '))
+        quantity = int(input('Iveskite kieki: '))
+
+        order = session.query(Order).filter(Order.id == order_id).first()
+        product = session.query(Product).filter(Product.id == product_id).first()
+
+        if order and product:
+            product_order = ProductOrder(order_id=order_id, product_id=product_id, quantity=quantity)
+            session.add(product_order)
+            session.commit()
+        else:
+            print('Uzsakymas arba produktas su nurodytu ID nerastas.')
 
     elif choice == 0:
         print('Aciu, kad naudojotes programa')
