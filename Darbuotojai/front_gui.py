@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from data_end import Darbuotojai
+from Darbuotojai.data_end import Darbuotojai
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

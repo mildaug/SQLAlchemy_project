@@ -51,11 +51,12 @@ class ProductOrder(Base):
     product = relationship('Product', back_populates='orders')
 
 
-engine = create_engine('sqlite:///shop.db', echo=True)
+engine = create_engine('sqlite:///shop_project.db', echo=True)
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 session = Session()
+
 
 while True:
     choice = input('''[===Pasirinkite veiksma===]: 
@@ -65,7 +66,7 @@ while True:
 4 - Prideti uzsakyma
 5 - Istraukti uzsakyma pagal ID
 6 - Pakeisti uzsakymo statusa pagal ID
-7 - Prideti i uzsakyma produktus su kiekais
+7 - Prideti i uzsakyma produktus su kiekiais
 0 - Uzdaryti programa
 ''').strip()
 
@@ -111,7 +112,11 @@ while True:
         uzsakymo_id = int(input('Iveskite uzsakymo ID: '))
         uzsakymo_info = session.query(Order).filter(Order.id == uzsakymo_id).first()
         if uzsakymo_info:
-            print(uzsakymo_info)
+            print(f"Uzsakymo ID: {uzsakymo_info.id}")
+            print("Uzsakyma sudaro:")
+            for product_order in uzsakymo_info.products:
+                product = product_order.product
+                print(f"Produkto ID: {product.id}, Pavadinimas: {product.name}, Kaina: {product.price}")
         else:
             print('Uzsakymas su nurodytu numeriu nerastas.')
 
