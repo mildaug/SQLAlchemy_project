@@ -57,7 +57,7 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-
+# Backend
 while True:
     choice = input('''[===Pasirinkite veiksma===]: 
 1 - Prideti pirkeja
