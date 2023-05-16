@@ -1,9 +1,9 @@
 import PySimpleGUI as sg
-from Darbuotojai.data_end import Darbuotojai
+from data_end import Darbuotojai
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('sqlite:///data.db', echo=True)
+engine = create_engine('sqlite:///Darbuotojai.data.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
